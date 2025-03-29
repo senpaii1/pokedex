@@ -4,6 +4,7 @@ import { Box, Image, Text, Badge, SimpleGrid, Center } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { getPokemonDetails } from "@/utils/fetchPokemon";
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
 import "@fontsource/press-start-2p";
 import "@fontsource/poppins";
@@ -30,16 +31,20 @@ const fetchPokemonData = async (id: string) => {
   }
 };
 
-const PokemonDetail = ({ params }: { params: { id: string } }) => {
+const PokemonDetail = () => {
+  const params = useParams();
+  const id = params.id as string;
+
   const [pokemon, setPokemon] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchPokemonData(params.id).then((data) => {
+    if (!id) return;
+    fetchPokemonData(id).then((data) => {
       setPokemon(data);
       setLoading(false);
     });
-  }, [params.id]);
+  }, [id]);
 
   if (loading) {
     return (
@@ -96,7 +101,6 @@ const PokemonDetail = ({ params }: { params: { id: string } }) => {
           boxShadow="lg"
           borderRadius="lg"
         >
-          {/* Pokémon Image & Name */}
           <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -119,7 +123,6 @@ const PokemonDetail = ({ params }: { params: { id: string } }) => {
             {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
           </Text>
 
-          {/* Pokémon Types */}
           <Box mt={3}>
             {pokemon.types.map((typeInfo: any) => (
               <Badge
@@ -136,7 +139,6 @@ const PokemonDetail = ({ params }: { params: { id: string } }) => {
             ))}
           </Box>
 
-          {/* Abilities */}
           <Text mt={4} fontSize="lg" fontWeight="bold" fontFamily="Poppins">
             Abilities:
           </Text>
@@ -153,7 +155,6 @@ const PokemonDetail = ({ params }: { params: { id: string } }) => {
             ))}
           </Box>
 
-          {/* Stats */}
           <Text mt={4} fontSize="lg" fontWeight="bold" fontFamily="Poppins">
             Base Stats:
           </Text>
@@ -165,7 +166,6 @@ const PokemonDetail = ({ params }: { params: { id: string } }) => {
             ))}
           </Box>
 
-          {/* Moves */}
           <Text mt={4} fontSize="lg" fontWeight="bold" fontFamily="Poppins">
             Moves:
           </Text>
